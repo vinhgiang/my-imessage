@@ -10,7 +10,7 @@
                 <li class="person active">
                     <img src="../assets/img/profile.jpg" alt="" />
                     <span class="name">Thomas Bangalter</span>
-                    <span class="time">{{ this.messages[this.messages.length - 1].date }}</span>
+                    <span class="time">{{ this.messages[this.messages.length - 1].date | moment('hh:mm a') }}</span>
                     <span class="preview">{{ this.messages[this.messages.length - 1].text }}</span>
                 </li>
             </ul>
@@ -23,8 +23,7 @@
             </div>
             <div class="chat active-chat">
                 <div class="conversation-start">
-                    <!-- <span>Today, {{ `${now.getHours()}:${now.getMinutes()}` }}</span> -->
-                    <span>Today, {{ now | moment("hh:mm a") }}</span>
+                    <span>Today, {{ now | moment('hh:mm a') }}</span>
                 </div>
                 <div v-for="(message, index) in messages" :key="index" class="bubble" :class="message.sender">
                     {{ message.text }}
@@ -67,6 +66,7 @@ export default {
   methods: {
     sendMsg () {
       if (this.newMessage.text !== '') {
+        this.newMessage.date = new Date()
         this.messages.push(this.newMessage)
         this.newMessage = {
           text: '',
@@ -81,8 +81,9 @@ export default {
       window.clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         let autoResponseMsg = {
-          'text': 'Thank you for your message',
-          'sender': 'you'
+          text: 'Thank you for your message',
+          sender: 'you',
+          date: new Date()
         }
         this.messages.push(autoResponseMsg)
       }, 5000)
